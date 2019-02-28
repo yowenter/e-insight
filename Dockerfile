@@ -16,7 +16,7 @@ COPY . /usr/src/app
 
 EXPOSE 5500
 
-CMD [ "newrelic-admin","run-program","gunicorn","-k","gevent","--max-requests","50000", \
+CMD [ "gunicorn","-k","gevent","--max-requests","50000", \
         "--max-requests-jitter","50000","--access-logfile","-", "--error-logfile","-","-b", \
         "0.0.0.0:5500","e_insight.app:app"  ]
 
