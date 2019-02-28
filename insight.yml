@@ -13,13 +13,13 @@ services:
         ports:
            - 3000:3000
 
-    insight:
-        # docker build -t insight .
-        # build: .
-        # image: insight
+    # insight:
+    #     # docker build -t insight .
+    #     # build: .
+    #     # image: insight
 
-        ports:
-            - 5500:5500
+    #     ports:
+    #         - 5500:5500
     
         
         
