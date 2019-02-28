@@ -31,7 +31,7 @@ scrape_configs:
   - job_name: 'insight'
     
     static_configs:
-    - targets: ['10.120.15.71:5500']
+    - targets: ['insight:5500']
 
 
 

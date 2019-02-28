@@ -12,14 +12,16 @@ services:
         image: grafana/grafana
         ports:
            - 3000:3000
+        volumes:
+           - ./grafana-storage:/var/lib/grafana
 
-    # insight:
-    #     # docker build -t insight .
-    #     # build: .
-    #     # image: insight
+    insight:
+        # docker build -t insight .
+        build: .
+        # image: insight
 
-    #     ports:
-    #         - 5500:5500
+        ports:
+            - 5500:5500
     
         
         
