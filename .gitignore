@@ -1,5 +1,6 @@
 .vscode
 *pyc
 *.swp
+grafana-storage
 __pycache__
 
