@@ -1,30 +1,30 @@
 from flask import Flask
-from werkzeug.wsgi import DispatcherMiddleware
-from prometheus_client import make_wsgi_app, CollectorRegistry, MetricsHandler, generate_latest
+from prometheus_client import CollectorRegistry, generate_latest
 
-from e_insight.collector import ALL_COLLECTORS
-from e_insight.utils.cache import cache
+from e_insight import collector
 
 # Create my app
 app = Flask(__name__)
 
-
 # Init Collector registry
 registry = CollectorRegistry()
 
-
-for c in ALL_COLLECTORS:
+for c in collector.ALL_COLLECTORS:
     registry.register(c)
-
-
-
-
 
 
 @app.route("/metrics")
 def metrics():
     # todo use cronjob to refresh cache
-    return generate_latest(registry=registry)
+    # system = generate_latest()
+    custom = generate_latest(registry=registry)
+    return custom
+
+
+@app.route('/')
+def hello():
+    """Return a friendly HTTP greeting."""
+    return 'Hello World!'
 
 
 # gunicorn e_insight.app:app_dispatch
@@ -32,5 +32,5 @@ def metrics():
 
 
 if __name__ == '__main__':
-#    app.run(debug=True, port=5050)
+    #    app.run(debug=True, port=5050)
     app.run()
