@@ -1,0 +1,6 @@
+runtime: python
+entrypoint: gunicorn e_insight.app:app -b :$PORT  -k gevent -w 2 --log-level debug
+env: flex
+runtime_config:
+  python_version: 3
+
