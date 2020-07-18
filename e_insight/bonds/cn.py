@@ -16,6 +16,7 @@
 #   --compressed \
 #   --insecure
 
+# http://data.eastmoney.com/cjsj/globalRate.html
 
 """
 

@@ -3,6 +3,7 @@ from prometheus_client import Counter, Gauge, Summary, Histogram, Info, Enum
 from e_insight.stocks.sina import Stock, Quote
 from e_insight.bonds import usa
 from e_insight.lib.cache import cache
+from e_insight.index import rate
 
 now = Gauge('now', 'time now for test')
 
@@ -23,6 +24,35 @@ bc7year = Gauge('BC_7YEAR', '美国 7 年期国债利率')
 bc10year = Gauge('BC_10YEAR', '美国 10 年期国债利率')
 bc20year = Gauge('BC_20YEAR', '美国 20 年期国债利率')
 bc30year = Gauge('BC_30YEAR', '美国 30 年期国债利率')
+
+cn_1year_rate = Gauge("CN_1YEAR_RATE", "中国一年期存款利率")
+cn_cpi_incr = Gauge("CN_CPI_INC", "中国 CPI 增长率")
+lpr_1year = Gauge("LPR_1YEAR", "lpr 1 年期")
+lpr_5year = Gauge("LPR_5YEAR", "lpr 5 年期")
+
+last_shibor = Gauge("SHIBOR_LAST_NIGHT", "隔夜拆借利率")
+week_1_shibor = Gauge("SHIBOR_1WEEK", "1 周 拆借利率")
+week_2_shibor = Gauge("SHIBOR_2WEEK", "2 周 拆借利率")
+mon_1_shibor = Gauge("SHIBOR_1MON", "1 月 拆借利率")
+mon_3_shibor = Gauge("SHIBOR_3MON", "3 月 拆借利率")
+mon_6_shibor = Gauge("SHIBOR_6MON", "6 月 拆借利率")
+mon_9_shibor = Gauge("SHIBOR_9MON", "9 月 拆借利率")
+year_1_shibor = Gauge("SHIBOR_1YEAR", "1 年 拆借利率")
+
+saving_rate_current = Gauge("SAVING_RATE_CUR", "活期存款利率")
+saving_rate_3mon = Gauge("SAVING_RATE_3MON", "3 月存款利率")
+saving_rate_6mon = Gauge("SAVING_RATE_6MON", "6 月存款利率")
+
+saving_rate_1year = Gauge("SAVING_RATE_1YEAR", "1 年存款利率")
+saving_rate_2year = Gauge("SAVING_RATE_2YEAR", "2 年存款利率")
+saving_rate_3year = Gauge("SAVING_RATE_3YEAR", "3 年存款利率")
+saving_rate_5year = Gauge("SAVING_RATE_5YEAR", "5 年存款利率")
+
+loan_rate_6mon = Gauge("LOAN_RATE_6MON", "6 月贷款利率")
+loan_rate_1year = Gauge("LOAN_RATE_1YEAR", "1 年贷款利率")
+loan_rate_3year = Gauge("LOAN_RATE_3YEAR", "3 年贷款利率")
+loan_rate_5year = Gauge("LOAN_RATE_5YEAR", "5 年贷款利率")
+loan_rate_10year = Gauge("LOAN_RATE_10YEAR", "10 年贷款利率")
 
 
 # ['Counter', 'Gauge', 'Summary', 'Histogram', 'Info', 'Enum']
@@ -49,8 +79,76 @@ def init_metrics_collectors():
     bc20year.set_function(lambda: usa.get_bond("BC_20YEAR"))
     bc30year.set_function(lambda: usa.get_bond("BC_30YEAR"))
 
-    return [now, sh000300, bc1month, bc2month, bc3month, bc6month, bc1year, bc2year, bc3year, bc5year, bc7year,
-            bc10year, bc20year, bc30year]
+    cn_1year_rate.set_function(lambda: rate.fetch_rate())
+    cn_cpi_incr.set_function(lambda: rate.fetch_cpi())
+
+    lpr_1year.set_function(lambda: rate.fetch_lpr("1Y"))
+    lpr_5year.set_function(lambda: rate.fetch_lpr("5Y"))
+
+    last_shibor.set_function(lambda: rate.fetch_shibor("隔夜(O/N)"))
+    week_1_shibor.set_function(lambda: rate.fetch_shibor("1周"))
+    week_2_shibor.set_function(lambda: rate.fetch_shibor("2周"))
+    mon_1_shibor.set_function(lambda: rate.fetch_shibor("1个月"))
+    mon_3_shibor.set_function(lambda: rate.fetch_shibor("3个月"))
+    mon_6_shibor.set_function(lambda: rate.fetch_shibor("6个月"))
+    mon_9_shibor.set_function(lambda: rate.fetch_shibor("9个月"))
+    year_1_shibor.set_function(lambda: rate.fetch_shibor("1年"))
+
+    saving_rate_current.set_function(lambda: rate.fetch_savingrate("活期存款"))
+    saving_rate_3mon.set_function(lambda: rate.fetch_savingrate("3个月"))
+    saving_rate_6mon.set_function(lambda: rate.fetch_savingrate("6个月"))
+    saving_rate_1year.set_function(lambda: rate.fetch_savingrate("1年(整存整取)"))
+    saving_rate_2year.set_function(lambda: rate.fetch_savingrate("2年(整存整取)"))
+    saving_rate_3year.set_function(lambda: rate.fetch_savingrate("3年(整存整取)"))
+    saving_rate_5year.set_function(lambda: rate.fetch_savingrate("5年(整存整取)"))
+
+    loan_rate_6mon.set_function(lambda: rate.fetch_loanrate("6个月以内(含)"))
+    loan_rate_6mon.set_function(lambda: rate.fetch_loanrate("6个月至1年(含)"))
+    loan_rate_1year.set_function(lambda: rate.fetch_loanrate("6个月至1年(含)"))
+    loan_rate_3year.set_function(lambda: rate.fetch_loanrate("1至3年(含)"))
+    loan_rate_5year.set_function(lambda: rate.fetch_loanrate("3至5年(含)"))
+    loan_rate_10year.set_function(lambda: rate.fetch_loanrate("5年以上"))
+
+    return [now,
+            sh000300,
+            bc1month,
+            bc2month,
+            bc3month,
+            bc6month,
+            bc1year,
+            bc2year,
+            bc3year,
+            bc5year,
+            bc7year,
+            bc10year,
+            bc20year,
+            bc30year,
+            cn_1year_rate,
+            cn_cpi_incr,
+            lpr_1year,
+            lpr_5year,
+            last_shibor,
+            week_1_shibor,
+            week_2_shibor,
+            mon_1_shibor,
+            mon_3_shibor,
+            mon_6_shibor,
+            mon_9_shibor,
+            year_1_shibor,
+            saving_rate_current,
+            saving_rate_3mon,
+            saving_rate_6mon,
+            saving_rate_1year,
+            saving_rate_2year,
+            saving_rate_3year,
+            saving_rate_5year,
+
+            loan_rate_6mon,
+            loan_rate_1year,
+            loan_rate_3year,
+            loan_rate_5year,
+            loan_rate_10year
+            ]
 
     # sc1904.set_function(lambda: Quote("原油期货", sc1904._name).get("current"))
 
