@@ -18,7 +18,7 @@ COPY . /usr/src/app
 
 EXPOSE 8000
 
-CMD [ "gunicorn","-k","sync","-w","5","--max-requests","50000", \
+CMD [ "gunicorn","-k","gevent","-w","5","--max-requests","50000", \
         "--max-requests-jitter","50000","--access-logfile","-", "--error-logfile","-","-b", \
         "0.0.0.0:8000","e_insight.app:app"  ]
 

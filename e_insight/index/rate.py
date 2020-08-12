@@ -24,42 +24,42 @@ from bs4 import BeautifulSoup as Soup
 
 # shibor
 
-@catch_default(-1)
+@catch_default(0)
 def fetch_rate():
     html = fetch_html("http://data.eastmoney.com/cjsj/globalRate.html")
     soup = Soup(html)
     return float(soup.find("td", text="1年期存款利率").find_next_sibling().text)
 
 
-@catch_default(-1)
+@catch_default(0)
 def fetch_cpi():
     html = fetch_html("http://data.eastmoney.com/cjsj/globalRate.html")
     soup = Soup(html)
     return float(soup.find("td", text="1年期存款利率").find_next_siblings()[5].text)
 
 
-@catch_default(-1)
+@catch_default(0)
 def fetch_lpr(yield_term):
     html = fetch_html("http://data.eastmoney.com/cjsj/globalRate.html")
     soup = Soup(html)
     return float(soup.find("td", text=yield_term).find_next_sibling().text)
 
 
-@catch_default(-1)
+@catch_default(0)
 def fetch_shibor(yield_term):
     html = fetch_html("http://data.eastmoney.com/cjsj/globalRate.html")
     soup = Soup(html)
     return float(soup.find("td", text=yield_term).find_next_sibling().text)
 
 
-@catch_default(-1)
+@catch_default(0)
 def fetch_savingrate(yield_term):
     html = fetch_html("http://data.eastmoney.com/cjsj/globalRate.html")
     soup = Soup(html)
     return float(soup.find("td", text=yield_term).find_next_sibling().text)
 
 
-@catch_default(-1)
+@catch_default(0)
 def fetch_loanrate(yield_term):
     html = fetch_html("http://data.eastmoney.com/cjsj/globalRate.html")
     soup = Soup(html)

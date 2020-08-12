@@ -4,10 +4,13 @@ from e_insight.stocks.sina import Stock, Quote
 from e_insight.bonds import usa
 from e_insight.lib.cache import cache
 from e_insight.index import rate
+from e_insight.index import currency
 
 now = Gauge('now', 'time now for test')
 
 sh000300 = Gauge("sh000300", "沪深 300 指数")
+sh600519 = Gauge("sh600519", "茅台")
+sh000001 = Gauge("sh000001", "上证指数")
 
 sc1904 = Gauge('SC1904', "原油期货")
 
@@ -54,6 +57,19 @@ loan_rate_3year = Gauge("LOAN_RATE_3YEAR", "3 年贷款利率")
 loan_rate_5year = Gauge("LOAN_RATE_5YEAR", "5 年贷款利率")
 loan_rate_10year = Gauge("LOAN_RATE_10YEAR", "10 年贷款利率")
 
+m2 = Gauge("M2", "M2 供应量")
+m1 = Gauge("M1", "M1 供应量")
+m0 = Gauge("M0", "M0 供应量")
+
+m2_inc = Gauge("M2_INC", "M2 同比增长量")
+m1_inc = Gauge("M1_INC", "M1 同比增长量")
+m0_inc = Gauge("M0_INC", "M0 同比增长量")
+
+reserve_rate_pre = Gauge("RESERVE_RATE_PRE", "存款准备金率前期")
+reserve_rate = Gauge("RESERVE_RATE", "存款准备金率")
+
+reserve_rate_mid_pre = Gauge("RESERVE_RATE_MIDPRE", "中小金融存款准备金率前期")
+reserve_rate_mid = Gauge("RESERVE_RATE_MID", "中小金融存款准备金率")
 
 # ['Counter', 'Gauge', 'Summary', 'Histogram', 'Info', 'Enum']
 # A counter is a cumulative metric that represents a single monotonically increasing counter whose value can only increase or be reset to zero on restart. For example, you can use a counter to represent the number of requests served, tasks completed, or errors.
@@ -64,7 +80,17 @@ loan_rate_10year = Gauge("LOAN_RATE_10YEAR", "10 年贷款利率")
 def init_metrics_collectors():
     # register func for metrics
     now.set_function(lambda: int(time.time()))
-    sh000300.set_function(cache(180)(lambda: Stock("沪深300", sh000300._name).get("current")))
+    sh000300.set_function(
+        cache(60)(lambda: Stock(sh000300._documentation, sh000300._name).get(
+            "current")))
+
+    sh600519.set_function(
+        cache(60)(lambda: Stock(sh600519._documentation, sh600519._name).get(
+            "current")))
+
+    sh000001.set_function(
+        cache(60)(lambda: Stock(sh000001._documentation, sh000001._name).get(
+            "current")))
 
     bc1month.set_function(lambda: usa.get_bond("BC_1MONTH"))
     bc2month.set_function(lambda: usa.get_bond("BC_2MONTH"))
@@ -109,48 +135,35 @@ def init_metrics_collectors():
     loan_rate_5year.set_function(lambda: rate.fetch_loanrate("3至5年(含)"))
     loan_rate_10year.set_function(lambda: rate.fetch_loanrate("5年以上"))
 
-    return [now,
-            sh000300,
-            bc1month,
-            bc2month,
-            bc3month,
-            bc6month,
-            bc1year,
-            bc2year,
-            bc3year,
-            bc5year,
-            bc7year,
-            bc10year,
-            bc20year,
-            bc30year,
-            cn_1year_rate,
-            cn_cpi_incr,
-            lpr_1year,
-            lpr_5year,
-            last_shibor,
-            week_1_shibor,
-            week_2_shibor,
-            mon_1_shibor,
-            mon_3_shibor,
-            mon_6_shibor,
-            mon_9_shibor,
-            year_1_shibor,
-            saving_rate_current,
-            saving_rate_3mon,
-            saving_rate_6mon,
-            saving_rate_1year,
-            saving_rate_2year,
-            saving_rate_3year,
-            saving_rate_5year,
+    m0.set_function(currency.fetch_M0)
+    m1.set_function(currency.fetch_M1)
+    m2.set_function(currency.fetch_M2)
+    m0_inc.set_function(currency.fetch_M0_Inc)
+    m1_inc.set_function(currency.fetch_M1_Inc)
+    m2_inc.set_function(currency.fetch_M2_Inc)
 
-            loan_rate_6mon,
-            loan_rate_1year,
-            loan_rate_3year,
-            loan_rate_5year,
-            loan_rate_10year
-            ]
+    reserve_rate_pre.set_function(currency.fetch_reserve_rate_pre)
+    reserve_rate.set_function(currency.fetch_reserve_rate)
 
-    # sc1904.set_function(lambda: Quote("原油期货", sc1904._name).get("current"))
+    reserve_rate_mid.set_function(currency.fetch_mid_reserve_rate)
+    reserve_rate_mid_pre.set_function(currency.fetch_mid_reserve_rate_pre)
 
 
-ALL_COLLECTORS = init_metrics_collectors()
+init_metrics_collectors()
+
+us_macro_collectors = [
+    bc1month, bc2month, bc3month, bc6month, bc1year, bc2year, bc3year, bc5year,
+    bc7year, bc10year, bc20year, bc30year
+]
+
+cn_macro_collectors = [
+    saving_rate_current, saving_rate_3mon, saving_rate_6mon, saving_rate_1year,
+    saving_rate_2year, saving_rate_3year, saving_rate_5year, loan_rate_6mon,
+    loan_rate_1year, loan_rate_3year, loan_rate_5year, loan_rate_10year, m0,
+    m1, m2, m0_inc, m1_inc, m2_inc, cn_1year_rate, cn_cpi_incr, lpr_1year,
+    lpr_5year, last_shibor, week_1_shibor, week_2_shibor, mon_1_shibor,
+    mon_3_shibor, mon_6_shibor, mon_9_shibor, year_1_shibor, reserve_rate,
+    reserve_rate_pre, reserve_rate_mid, reserve_rate_mid_pre
+]
+
+stocks_collectors = [sh000300, sh600519, sh000001]

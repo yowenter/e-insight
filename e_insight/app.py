@@ -9,8 +9,18 @@ app = Flask(__name__)
 # Init Collector registry
 registry = CollectorRegistry()
 
-for c in collector.ALL_COLLECTORS:
+cn_registry = CollectorRegistry()
+
+stocks_registry = CollectorRegistry()
+
+for c in collector.us_macro_collectors:
     registry.register(c)
+
+for c in collector.cn_macro_collectors:
+    cn_registry.register(c)
+
+for c in collector.stocks_collectors:
+    stocks_registry.register(c)
 
 
 @app.route("/metrics")
@@ -21,6 +31,19 @@ def metrics():
     return custom
 
 
+@app.route("/metrics/cn")
+def cn_metrics():
+    # todo use cronjob to refresh cache
+    # system = generate_latest()
+    custom = generate_latest(registry=cn_registry)
+    return custom
+
+
+@app.route("/metrics/stocks")
+def stock_metrics():
+    return generate_latest(registry=stocks_registry)
+
+
 @app.route('/')
 def hello():
     """Return a friendly HTTP greeting."""
@@ -29,7 +52,6 @@ def hello():
 
 # gunicorn e_insight.app:app_dispatch
 # gunicorn --log-level debug  e_insight.app:app_dispatch --reload -w 1 --bind 0.0.0.0
-
 
 if __name__ == '__main__':
     #    app.run(debug=True, port=5050)
