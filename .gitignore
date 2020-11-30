@@ -3,5 +3,6 @@
 *pyc
 *.swp
 grafana-storage
+prometheus-data
 __pycache__
 

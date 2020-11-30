@@ -1,30 +1,38 @@
 version: "2.2"
 services:
-#    prometheus:
-#        image: prom/prometheus
-#        ports:
-#            - 9090:9090
-#        volumes:
-#            - ./prometheus.yml:/etc/prometheus/prometheus.yml
-#            - ./prometheus-data:/prometheus-data
+    prometheus:
+        image: prom/prometheus
+        ports:
+            - 9090:9090
+        volumes:
+            - ./prometheus.yml:/etc/prometheus/prometheus.yml
+            - ./prometheus-data:/prometheus
 
-#    grafana:
-#        image: grafana/grafana
-#        ports:
-#           - 3000:3000
-#        volumes:
-#           - ./grafana-storage:/var/lib/grafana
+    grafana:
+        image: grafana/grafana
+        ports:
+           - 3000:3000
+        volumes:
+           - ./grafana-storage:/var/lib/grafana
 
     insight:
         # docker build -t insight .
         build: .
         # image: insight
         environment:
-          DOWNLOADER_PROXY: "http://10.114.0.2:3101/fetch"
+          DOWNLOADER_PROXY: "http://web_proxy:8080/fetch"
 
         ports:
             - 5500:8000
-    
+
         
-        
-  
+    chrome_headless:
+        image: browserless/chrome
+
+    web_proxy:
+        # docker build -t insight .
+#        build: .
+        image: daocloud.io/airywenter/browserless:latest
+        environment:
+            NODE_ENV: prod
+            BROWSERLESS_HOST: chrome_headless:3000

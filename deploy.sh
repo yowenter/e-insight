@@ -1,5 +1,5 @@
 set -ex
-rsync -r /Users/wenter/iProjects/e-insight root@161.35.201.232:/root/
-ssh do "cd e-insight && docker-compose -f insight.yml build "
-ssh do "cd e-insight && docker-compose -f insight.yml up -d "
+rsync --exclude venv -r ../e-insight root@ty-1:/root/
+ssh ty-1 "cd e-insight && docker-compose -f insight.yml build "
+#ssh ty-1 "cd e-insight && docker-compose -f insight.yml up -d "
 

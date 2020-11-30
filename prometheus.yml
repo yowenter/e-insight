@@ -28,10 +28,17 @@ scrape_configs:
   #   static_configs:
   #   - targets: ['localhost:9090']
 
-  - job_name: 'insight'
+  - job_name: 'metrics'
     
     static_configs:
-    - targets: ['insight:5500']
+    - targets: ['insight:8000']
+
+
+  - job_name: 'metrics_cn'
+    metrics_path: '/metrics/cn'
+    static_configs:
+      - targets: ['insight:8000']
+
 
 
 
