@@ -44,6 +44,12 @@ def stock_metrics():
     return generate_latest(registry=stocks_registry)
 
 
+@app.route("/metrics/dynamic")
+def dynamic_metrics():
+    reg = CollectorRegistry()
+    return generate_latest(registry=reg)
+
+
 @app.route('/')
 def hello():
     """Return a friendly HTTP greeting."""
