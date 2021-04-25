@@ -53,6 +53,16 @@ def hello():
 # gunicorn e_insight.app:app_dispatch
 # gunicorn --log-level debug  e_insight.app:app_dispatch --reload -w 1 --bind 0.0.0.0
 
+from e_insight.spider import p
+
+#
+# thread = Thread(target=lambda: p.start)
+
+from multiprocessing import Process
+
+proc = Process(target=lambda: p.start, daemon=True)
+proc.start()
 if __name__ == '__main__':
     #    app.run(debug=True, port=5050)
+
     app.run()

@@ -4,3 +4,4 @@ requests==2.18.1
 gunicorn==19.9.0
 gevent==1.4.0
 beautifulsoup4
+scrapy
