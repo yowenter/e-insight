@@ -5,4 +5,5 @@
 grafana-storage
 prometheus-data
 __pycache__
+scheduler.lock
 

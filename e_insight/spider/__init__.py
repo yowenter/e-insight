@@ -1,25 +1,22 @@
-import logging
-import scrapy
-import time
-
-LOG = logging.getLogger(__name__)
-
-
-class EastMoneySpider(scrapy.Spider):
-    name = "east_money_spider"
-    start_urls = ["http://www.baidu.com"]
-
-    def __init__(self, *args, **kwargs):
-        super(EastMoneySpider, self).__init__(*args, **kwargs)
-        # self.proxy_pool = ["http://localhost:8080/fetch"]
-
-    def parse(self, response, **kwargs):
-        time.sleep(10)
-        print("done")
-        pass
-
-
 from scrapy.crawler import CrawlerProcess
+import signal
+from e_insight.spider.usa_bond import USABond
+from e_insight.spider.settings import settings
 
-p = CrawlerProcess()
-p.crawl(EastMoneySpider)
+from multiprocessing import Process
+
+
+def start_crawl():
+    def f():
+        p = CrawlerProcess(settings=settings)
+        p.crawl(USABond)
+        p.start()
+
+    p = Process(target=f)
+    p.start()
+
+    # p._startedBefore = False
+    # p.start(stop_after_crawl=False)
+    # p._signal_kill(signal.SIGHUP, None)
+
+    # p._signal_shutdown(signal.SIGKILL, None)

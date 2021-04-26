@@ -1,8 +1,12 @@
+import logging
 from flask import Flask
 from prometheus_client import CollectorRegistry, generate_latest
 
 from e_insight import collector
+import schedule
+from datetime import datetime
 
+LOG = logging.getLogger(__name__)
 # Create my app
 app = Flask(__name__)
 
@@ -59,15 +63,29 @@ def hello():
 # gunicorn e_insight.app:app_dispatch
 # gunicorn --log-level debug  e_insight.app:app_dispatch --reload -w 1 --bind 0.0.0.0
 
-from e_insight.spider import p
+from e_insight.spider import start_crawl
 
 #
 # thread = Thread(target=lambda: p.start)
 
 from multiprocessing import Process
+import time
+from filelock import FileLock
 
-proc = Process(target=lambda: p.start, daemon=True)
+
+def scheduler():
+    LOG.info("scheduler started.")
+    schedule.every(60).seconds.do(start_crawl)
+    lock = FileLock("scheduler.lock", timeout=3)
+    with lock:
+        while True:
+            schedule.run_pending()
+            time.sleep(3)
+
+
+proc = Process(target=scheduler)
 proc.start()
+
 if __name__ == '__main__':
     #    app.run(debug=True, port=5050)
 

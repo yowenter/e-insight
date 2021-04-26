@@ -5,3 +5,5 @@ gunicorn==19.9.0
 gevent==1.4.0
 beautifulsoup4
 scrapy
+filelock
+schedule
