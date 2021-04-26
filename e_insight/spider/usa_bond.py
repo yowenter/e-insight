@@ -6,6 +6,8 @@ from xml.dom.minidom import parseString
 
 from prometheus_client.metrics import Gauge
 
+from e_insight.spider.items import MetricItem
+
 LOG = logging.getLogger(__name__)
 
 
@@ -38,4 +40,8 @@ class USABond(scrapy.Spider):
             rate = ele.getElementsByTagName("m:properties")[0].getElementsByTagName("d:%s" % item)[0].childNodes[
                 0].data
 
-            print(rate)
+            yield MetricItem(
+                name=item,
+                value=rate,
+                type=Gauge._type
+            )
