@@ -35,7 +35,7 @@ class USABond(scrapy.Spider):
 
     def parse(self, response, **kwargs):
         tree = parseString(response.text)
-        for item in ["BC_10YEAR", "BC_1YEAR"]:
+        for item in ["BC_10YEAR", "BC_1YEAR", "BC_1MONTH", "BC_6MONTH", "BC_5YEAR", "BC_3YEAR"]:
             ele = tree.getElementsByTagName("entry")[-1].getElementsByTagName("content")[0]
             rate = ele.getElementsByTagName("m:properties")[0].getElementsByTagName("d:%s" % item)[0].childNodes[
                 0].data
@@ -43,5 +43,6 @@ class USABond(scrapy.Spider):
             yield MetricItem(
                 name=item,
                 value=rate,
-                type=Gauge._type
+                type=Gauge._type,
+                description="美国国债利率"
             )

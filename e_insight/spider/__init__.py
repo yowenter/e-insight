@@ -6,10 +6,10 @@ from e_insight.spider.settings import settings
 from multiprocessing import Process
 
 
-def start_crawl():
+def start_crawl(spider_cls):
     def f():
         p = CrawlerProcess(settings=settings)
-        p.crawl(USABond)
+        p.crawl(spider_cls)
         p.start()
 
     p = Process(target=f)

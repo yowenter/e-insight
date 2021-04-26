@@ -14,19 +14,19 @@ sh000001 = Gauge("sh000001", "上证指数")
 
 sc1904 = Gauge('SC1904', "原油期货")
 
-bc1month = Gauge('BC_1MONTH', '美国 1 月期国债利率')
-bc2month = Gauge('BC_2MONTH', '美国 2 月期国债利率')
-bc3month = Gauge('BC_3MONTH', '美国 3 月期国债利率')
-bc6month = Gauge('BC_6MONTH', '美国 6 月期国债利率')
-
-bc1year = Gauge('BC_1YEAR', '美国 1 年期国债利率')
-bc2year = Gauge('BC_2YEAR', '美国 2 年期国债利率')
-bc3year = Gauge('BC_3YEAR', '美国 3 年期国债利率')
-bc5year = Gauge('BC_5YEAR', '美国 5 年期国债利率')
-bc7year = Gauge('BC_7YEAR', '美国 7 年期国债利率')
-bc10year = Gauge('BC_10YEAR', '美国 10 年期国债利率')
-bc20year = Gauge('BC_20YEAR', '美国 20 年期国债利率')
-bc30year = Gauge('BC_30YEAR', '美国 30 年期国债利率')
+# bc1month = Gauge('BC_1MONTH', '美国 1 月期国债利率')
+# bc2month = Gauge('BC_2MONTH', '美国 2 月期国债利率')
+# bc3month = Gauge('BC_3MONTH', '美国 3 月期国债利率')
+# bc6month = Gauge('BC_6MONTH', '美国 6 月期国债利率')
+#
+# bc1year = Gauge('BC_1YEAR', '美国 1 年期国债利率')
+# bc2year = Gauge('BC_2YEAR', '美国 2 年期国债利率')
+# bc3year = Gauge('BC_3YEAR', '美国 3 年期国债利率')
+# bc5year = Gauge('BC_5YEAR', '美国 5 年期国债利率')
+# bc7year = Gauge('BC_7YEAR', '美国 7 年期国债利率')
+# bc10year = Gauge('BC_10YEAR', '美国 10 年期国债利率')
+# bc20year = Gauge('BC_20YEAR', '美国 20 年期国债利率')
+# bc30year = Gauge('BC_30YEAR', '美国 30 年期国债利率')
 
 cn_1year_rate = Gauge("CN_1YEAR_RATE", "中国一年期存款利率")
 cn_cpi_incr = Gauge("CN_CPI_INC", "中国 CPI 增长率")
@@ -92,18 +92,18 @@ def init_metrics_collectors():
         cache(60)(lambda: Stock(sh000001._documentation, sh000001._name).get(
             "current")))
 
-    bc1month.set_function(lambda: usa.get_bond("BC_1MONTH"))
-    bc2month.set_function(lambda: usa.get_bond("BC_2MONTH"))
-    bc3month.set_function(lambda: usa.get_bond("BC_3MONTH"))
-    bc6month.set_function(lambda: usa.get_bond("BC_6MONTH"))
-    bc1year.set_function(lambda: usa.get_bond("BC_1YEAR"))
-    bc2year.set_function(lambda: usa.get_bond("BC_2YEAR"))
-    bc3year.set_function(lambda: usa.get_bond("BC_3YEAR"))
-    bc5year.set_function(lambda: usa.get_bond("BC_5YEAR"))
-    bc7year.set_function(lambda: usa.get_bond("BC_7YEAR"))
-    bc10year.set_function(lambda: usa.get_bond("BC_10YEAR"))
-    bc20year.set_function(lambda: usa.get_bond("BC_20YEAR"))
-    bc30year.set_function(lambda: usa.get_bond("BC_30YEAR"))
+    # bc1month.set_function(lambda: usa.get_bond("BC_1MONTH"))
+    # bc2month.set_function(lambda: usa.get_bond("BC_2MONTH"))
+    # bc3month.set_function(lambda: usa.get_bond("BC_3MONTH"))
+    # bc6month.set_function(lambda: usa.get_bond("BC_6MONTH"))
+    # bc1year.set_function(lambda: usa.get_bond("BC_1YEAR"))
+    # bc2year.set_function(lambda: usa.get_bond("BC_2YEAR"))
+    # bc3year.set_function(lambda: usa.get_bond("BC_3YEAR"))
+    # bc5year.set_function(lambda: usa.get_bond("BC_5YEAR"))
+    # bc7year.set_function(lambda: usa.get_bond("BC_7YEAR"))
+    # bc10year.set_function(lambda: usa.get_bond("BC_10YEAR"))
+    # bc20year.set_function(lambda: usa.get_bond("BC_20YEAR"))
+    # bc30year.set_function(lambda: usa.get_bond("BC_30YEAR"))
 
     cn_1year_rate.set_function(lambda: rate.fetch_rate())
     cn_cpi_incr.set_function(lambda: rate.fetch_cpi())
@@ -151,10 +151,10 @@ def init_metrics_collectors():
 
 init_metrics_collectors()
 
-us_macro_collectors = [
-    bc1month, bc2month, bc3month, bc6month, bc1year, bc2year, bc3year, bc5year,
-    bc7year, bc10year, bc20year, bc30year
-]
+# us_macro_collectors = [
+#     bc1month, bc2month, bc3month, bc6month, bc1year, bc2year, bc3year, bc5year,
+#     bc7year, bc10year, bc20year, bc30year
+# ]
 
 cn_macro_collectors = [
     saving_rate_current, saving_rate_3mon, saving_rate_6mon, saving_rate_1year,

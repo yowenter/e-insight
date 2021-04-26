@@ -1,6 +1,8 @@
 import logging
 from flask import Flask
 from prometheus_client import CollectorRegistry, generate_latest
+from e_insight.spider.pipeline import MetricsHandler, MetricsUploader
+from flask import request
 
 from e_insight import collector
 import schedule
@@ -17,8 +19,8 @@ cn_registry = CollectorRegistry()
 
 stocks_registry = CollectorRegistry()
 
-for c in collector.us_macro_collectors:
-    registry.register(c)
+# for c in collector.us_macro_collectors:
+#     registry.register(c)
 
 for c in collector.cn_macro_collectors:
     cn_registry.register(c)
@@ -54,6 +56,17 @@ def dynamic_metrics():
     return generate_latest(registry=reg)
 
 
+@app.route("/metrics/crawler")
+def crawler_metrics():
+    return MetricsHandler()
+
+
+@app.route("/metrics/data", methods=["POST"])
+def upload_metrics():
+    data = request.json
+    return MetricsUploader(data)
+
+
 @app.route('/')
 def hello():
     """Return a friendly HTTP greeting."""
@@ -64,6 +77,7 @@ def hello():
 # gunicorn --log-level debug  e_insight.app:app_dispatch --reload -w 1 --bind 0.0.0.0
 
 from e_insight.spider import start_crawl
+from e_insight.spider.usa_bond import USABond
 
 #
 # thread = Thread(target=lambda: p.start)
@@ -75,7 +89,7 @@ from filelock import FileLock
 
 def scheduler():
     LOG.info("scheduler started.")
-    schedule.every(60).seconds.do(start_crawl)
+    schedule.every(10).minutes.do(start_crawl, USABond)
     lock = FileLock("scheduler.lock", timeout=3)
     with lock:
         while True:
@@ -89,4 +103,4 @@ proc.start()
 if __name__ == '__main__':
     #    app.run(debug=True, port=5050)
 
-    app.run()
+    app.run(port=8000)
