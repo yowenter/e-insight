@@ -6,7 +6,8 @@ from xml.dom.minidom import parseString
 
 from prometheus_client.metrics import Gauge
 
-from e_insight.spider.items import MetricItem
+from e_insight.crawler.items import MetricItem
+
 
 LOG = logging.getLogger(__name__)
 

@@ -1,11 +1,6 @@
 from scrapy.crawler import CrawlerProcess
-import signal
-from e_insight.spider.usa_bond import USABond
-from e_insight.spider.settings import settings
-import logging
-import sys
-
-
+from e_insight.crawler.spiders.usa_bond import USABond
+from e_insight.crawler.settings import settings
 
 from multiprocessing import Process
 

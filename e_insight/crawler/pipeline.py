@@ -85,7 +85,7 @@ def MetricsHandler():
 class PrometheusMetricItemPipeline:
 
     def process_item(self, item, spider):
-        LOG.info("process item %s from spider %s", item, spider.name)
+        LOG.info("process item %s from crawler %s", item, spider.name)
         if item.__class__.__name__ != "MetricItem":
             LOG.info("item type %s not MetricItem. ", item.__class__.__name__)
             return

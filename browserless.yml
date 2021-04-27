@@ -1,0 +1,13 @@
+version: "2.2"
+services:
+    chrome_headless:
+        image: browserless/chrome
+
+    web_proxy:
+        image: daocloud.io/airywenter/browserless:latest
+        ports:
+            - 8080:8080
+        environment:
+            NODE_ENV: prod
+            BROWSERLESS_HOST: chrome_headless:3000
+

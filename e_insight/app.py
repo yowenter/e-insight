@@ -1,12 +1,19 @@
 import logging
 from flask import Flask
+from datetime import datetime
 from prometheus_client import CollectorRegistry, generate_latest
-from e_insight.spider.pipeline import MetricsHandler, MetricsUploader
+from e_insight.crawler.pipeline import MetricsHandler, MetricsUploader
+
+from e_insight.crawler import start_crawl
+
+from multiprocessing import Process
+import time
+from filelock import FileLock
+
 from flask import request
 
 from e_insight import collector
 import schedule
-from datetime import datetime
 
 LOG = logging.getLogger(__name__)
 
@@ -74,34 +81,30 @@ def hello():
     return 'Hello World!'
 
 
-# gunicorn e_insight.app:app_dispatch
+# gunicorn e_insight.app:app
 # gunicorn --log-level debug  e_insight.app:app_dispatch --reload -w 1 --bind 0.0.0.0
 
-from e_insight.spider import start_crawl
-from e_insight.spider.usa_bond import USABond
 
-#
-# thread = Thread(target=lambda: p.start)
-
-from multiprocessing import Process
-import time
-from filelock import FileLock
-
-
-def ping():
-    LOG.info("scheduler ping.")
+from e_insight.crawler.spiders.usa_bond import USABond
+from e_insight.crawler.spiders.east_money import EastMoney
 
 
 def scheduler():
     print("scheduler started.")
     LOG.info("scheduler started.")
     schedule.every(30).seconds.do(ping)
-    schedule.every(3).minutes.do(start_crawl, USABond)
+    schedule.every(20).seconds.do(start_crawl, EastMoney)
+    schedule.every(5).minutes.do(start_crawl, USABond)
+
     lock = FileLock("scheduler.lock", timeout=3)
     with lock:
         while True:
             schedule.run_pending()
             time.sleep(3)
+
+
+def ping():
+    LOG.info("scheduler ping at %s.", datetime.now())
 
 
 proc = Process(target=scheduler)
