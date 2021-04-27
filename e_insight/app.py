@@ -88,10 +88,14 @@ import time
 from filelock import FileLock
 
 
+def ping():
+    LOG.info("scheduler ping.")
+
+
 def scheduler():
     print("scheduler started.")
     LOG.info("scheduler started.")
-    schedule.every(30).seconds.do(print, "ping")
+    schedule.every(30).seconds.do(ping)
     schedule.every(3).minutes.do(start_crawl, USABond)
     lock = FileLock("scheduler.lock", timeout=3)
     with lock:
