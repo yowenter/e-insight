@@ -38,6 +38,7 @@ def MetricsUploader(item):
         metric = MetricsMap[k]
     LOG.debug("metric %s", metric)
     if metric is not None:
+        metric.samples = []
         metric.add_metric([], item["value"])
 
     return "success"

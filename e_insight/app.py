@@ -87,6 +87,7 @@ def hello():
 
 from e_insight.crawler.spiders.usa_bond import USABond
 from e_insight.crawler.spiders.east_money import EastMoney
+from e_insight.crawler.spiders.sina_stock import SinaStock
 
 
 def scheduler():
@@ -95,6 +96,7 @@ def scheduler():
     schedule.every(30).seconds.do(ping)
     # schedule.every(20).seconds.do(start_crawl, EastMoney)
     schedule.every(5).minutes.do(start_crawl, USABond)
+    schedule.every(30).seconds.do(start_crawl, SinaStock)
 
     lock = FileLock("scheduler.lock", timeout=3)
     with lock:
