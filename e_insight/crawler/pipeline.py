@@ -3,6 +3,7 @@ import requests
 import json
 
 from prometheus_client.core import Metric, GaugeMetricFamily
+from prometheus_client.samples import Sample
 
 LOG = logging.getLogger(__name__)
 
@@ -38,8 +39,24 @@ def MetricsUploader(item):
         metric = MetricsMap[k]
     LOG.debug("metric %s", metric)
     if metric is not None:
-        metric.samples = []
-        metric.add_metric([], item["value"])
+        foundIdx = -1
+        for idx, sample in enumerate(metric.samples):
+            if sample.name == item["name"]:
+                if item.get("labels", None) is not None:
+                    if "_".join(["%s-%s" % (k, v) for k, v in
+                                 sorted(sample.labels.items(), key=lambda x: x[0])]) \
+                            == "_".join(
+                        ["%s-%s" % (k, v) for k, v in sorted(item["labels"].items(), key=lambda x: x[0])]):
+                        foundIdx = idx
+                        break
+                else:
+                    foundIdx = idx
+                    break
+
+        if foundIdx > -1:
+            metric.samples[foundIdx] = Sample(item["name"], item["labels"], item["value"], None)
+        else:
+            metric.samples.append(Sample(item["name"], item["labels"], item["value"], None))
 
     return "success"
 
@@ -94,6 +111,7 @@ class PrometheusMetricItemPipeline:
             "name": item["name"],
             "type": item["type"],
             "description": item["description"],
-            "value": item["value"]
+            "value": item["value"],
+            "labels": item["labels"]
         })
         LOG.info("upload metrics data, resp %s", resp.status_code)

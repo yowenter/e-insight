@@ -6,3 +6,4 @@ class MetricItem(scrapy.item.Item):
     value = scrapy.Field()
     type = scrapy.Field()
     description = scrapy.Field()
+    labels = scrapy.Field()
