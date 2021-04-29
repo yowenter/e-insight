@@ -1,10 +1,8 @@
 import time
-from prometheus_client import Counter, Gauge, Summary, Histogram, Info, Enum
-from e_insight.stocks.sina import Stock, Quote
-from e_insight.bonds import usa
+from prometheus_client import Gauge
+from e_insight.deprecated.stocks.sina import Stock
 from e_insight.lib.cache import cache
-from e_insight.index import rate
-from e_insight.index import currency
+from e_insight.deprecated.index import rate, currency
 
 now = Gauge('now', 'time now for test')
 
