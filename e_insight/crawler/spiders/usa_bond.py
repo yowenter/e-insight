@@ -8,7 +8,6 @@ from prometheus_client.metrics import Gauge
 
 from e_insight.crawler.items import MetricItem
 
-
 LOG = logging.getLogger(__name__)
 
 
@@ -42,8 +41,11 @@ class USABond(scrapy.Spider):
                 0].data
 
             yield MetricItem(
-                name=item,
+                name="US_BONDS",
                 value=rate,
+                labels={"yield": item},
                 type=Gauge._type,
                 description="美国国债利率"
             )
+
+            

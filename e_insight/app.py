@@ -94,9 +94,9 @@ def scheduler():
     print("scheduler started.")
     LOG.info("scheduler started.")
     schedule.every(30).seconds.do(ping)
-    # schedule.every(20).seconds.do(start_crawl, EastMoney)
+    schedule.every(10).minutes.do(start_crawl, EastMoney)
     schedule.every(5).minutes.do(start_crawl, USABond)
-    schedule.every(30).seconds.do(start_crawl, SinaStock)
+    schedule.every(60).seconds.do(start_crawl, SinaStock)
 
     lock = FileLock("scheduler.lock", timeout=3)
     with lock:

@@ -1,5 +1,6 @@
 import logging
 import scrapy
+import json
 import time
 from datetime import datetime
 from xml.dom.minidom import parseString
@@ -17,11 +18,34 @@ LOG = logging.getLogger(__name__)
 
 class EastMoney(scrapy.Spider):
     name = "east_money"
-    start_urls = ["https://data.eastmoney.com/cjsj/hbgyl.html"]
+    start_urls = [
+        "https://datainterface.eastmoney.com/EM_DataCenter/JS.aspx?type=GJZB&sty=ZGZB&p=1&ps=200&mkt=11"]
     use_chrome_proxy = True
 
     def parse(self, response, **kwargs):
-        soup = Soup(response.text)
-        print(soup)
-        div = soup.find("div", attrs={"class": "content"})
-        print(div)
+        data = json.loads(response.text[1:-1])
+        points = data[0].split(",")[1:]
+
+        for i in range(0, 9, 3):
+            yield MetricItem(
+                name="money_supply",
+                value=points[i],
+                labels={"m": "m%d" % (2 - int(i / 3))},
+                type=Gauge._type,
+                description="货币供应量"
+            )
+            yield MetricItem(
+                name="money_supply_yoy",
+                value=points[i + 1],
+                labels={"m": "m%d" % (2 - int(i / 3))},
+                type=Gauge._type,
+                description="货币供应量 yoy"
+            )
+
+            yield MetricItem(
+                name="money_supply_inc",
+                value=points[i + 2],
+                labels={"m": "m%d" % (2 - int(i / 3))},
+                type=Gauge._type,
+                description="货币供应量环比"
+            )
