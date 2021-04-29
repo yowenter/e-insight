@@ -20,7 +20,8 @@ class EastMoney(scrapy.Spider):
     name = "east_money"
     start_urls = [
         "https://datainterface.eastmoney.com/EM_DataCenter/JS.aspx?type=GJZB&sty=ZGZB&p=1&ps=200&mkt=11"]
-    use_chrome_proxy = True
+
+    # use_chrome_proxy = True
 
     def parse(self, response, **kwargs):
         data = json.loads(response.text[1:-1])
@@ -49,3 +50,47 @@ class EastMoney(scrapy.Spider):
                 type=Gauge._type,
                 description="货币供应量环比"
             )
+
+
+class EastMoneyTreasury(scrapy.Spider):
+    name = "east_money_treasury"
+    start_urls = [
+        "http://datacenter.eastmoney.com/api/data/get?type=RPTA_WEB_TREASURYYIELD&sty=ALL&st=SOLAR_DATEp=1&ps=99999"]
+
+    # use_chrome_proxy = True
+
+    def parse(self, response, **kwargs):
+        data = json.loads(response.text)
+        data = data["result"]["data"][0]
+
+        yield MetricItem(
+            name="treasury_yield_ror",
+            value=data["EMG00001310"],
+            description="国债收益率",
+            type=Gauge._type,
+            labels={"yield": "10year", "country": "us"}
+        )
+
+        yield MetricItem(
+            name="treasury_yield_ror",
+            value=data["EMG00001306"],
+            description="国债收益率",
+            type=Gauge._type,
+            labels={"yield": "2year", "country": "us"}
+        )
+
+        yield MetricItem(
+            name="treasury_yield_ror",
+            value=data["EMM00166466"],
+            description="国债收益率",
+            type=Gauge._type,
+            labels={"yield": "10year", "country": "cn"}
+        )
+
+        yield MetricItem(
+            name="treasury_yield_ror",
+            value=data["EMM00588704"],
+            description="国债收益率",
+            type=Gauge._type,
+            labels={"yield": "2year", "country": "cn"}
+        )

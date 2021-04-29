@@ -86,7 +86,7 @@ def hello():
 
 
 from e_insight.crawler.spiders.usa_bond import USABond
-from e_insight.crawler.spiders.east_money import EastMoney
+from e_insight.crawler.spiders.east_money import EastMoney, EastMoneyTreasury
 from e_insight.crawler.spiders.sina_stock import SinaStock
 
 
@@ -94,6 +94,7 @@ def scheduler():
     print("scheduler started.")
     LOG.info("scheduler started.")
     schedule.every(30).seconds.do(ping)
+    schedule.every(10).minutes.do(start_crawl, EastMoneyTreasury)
     schedule.every(10).minutes.do(start_crawl, EastMoney)
     schedule.every(5).minutes.do(start_crawl, USABond)
     schedule.every(60).seconds.do(start_crawl, SinaStock)
