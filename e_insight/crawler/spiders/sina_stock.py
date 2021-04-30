@@ -37,7 +37,6 @@ class SinaStock(scrapy.Spider):
 
         for line in response.text.split("\n"):
             if len(line.split("=")) != 2:
-                print(line)
                 continue
             name, data = line.split("=")
             points = data.strip().split(",")

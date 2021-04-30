@@ -61,7 +61,7 @@ class EastMoneyTreasury(scrapy.Spider):
 
     def parse(self, response, **kwargs):
         data = json.loads(response.text)
-        data = data["result"]["data"][0]
+        data = data["result"]["data"][1]
 
         yield MetricItem(
             name="treasury_yield_ror",
@@ -94,3 +94,31 @@ class EastMoneyTreasury(scrapy.Spider):
             type=Gauge._type,
             labels={"yield": "2year", "country": "cn"}
         )
+
+
+class EastMoneyTradeFlow(scrapy.Spider):
+    name = "east_money_trade_flow"
+    start_urls = [
+        "http://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get?lmt=0&klt=101&fields1=f1%2Cf2%2Cf3%2Cf7&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61%2Cf62%2Cf63%2Cf64%2Cf65&secid=1.000001&secid2=0.399001"]
+
+    data_idx = {
+        "main_flow_in": 1,
+
+        "small_flow_in": 2,
+        "medium_flow_in": 3,
+        "large_flow_in": 4,
+        "super_large_flow_in": 5
+
+    }
+
+    def parse(self, response, **kwargs):
+        data = json.loads(response.text)
+        data = data["data"]["klines"][-1]
+        for k, v in self.data_idx.items():
+            yield MetricItem(
+                name="trade_flow",
+                value=data[v],
+                description="成交量",
+                type=Gauge._type,
+                labels={"flow": k}
+            )

@@ -37,7 +37,7 @@ def MetricsUploader(item):
             MetricsMap[k] = metric
     else:
         metric = MetricsMap[k]
-    LOG.debug("metric %s", metric)
+
     if metric is not None:
         foundIdx = -1
         for idx, sample in enumerate(metric.samples):
@@ -114,4 +114,4 @@ class PrometheusMetricItemPipeline:
             "value": item["value"],
             "labels": item["labels"]
         })
-        LOG.info("upload metrics data, resp %s", resp.status_code)
+    # LOG.info("upload metrics data, resp %s", resp.status_code)

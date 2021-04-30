@@ -45,7 +45,7 @@ class ShiborShanghai(scrapy.Spider):
             tds = tr.find_all("td")
             yield MetricItem(
                 name="shibor",
-                value=float(re.search("(\d|\.)+", tds[4].text).group()),
+                value=float(re.search("(\d|\.)+", tds[2].text).group()),
                 type=Gauge._type,
                 labels={
                     "yield": tds[1].text
