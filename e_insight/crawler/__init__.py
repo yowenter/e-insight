@@ -5,11 +5,10 @@ from e_insight.crawler.settings import settings
 from multiprocessing import Process
 
 
-def start_crawl(*spider_cls):
+def start_crawl(spider_cls):
     def f():
-        for spider in spider_cls:
-            p = CrawlerProcess(settings=settings)
-            p.crawl(spider)
+        p = CrawlerProcess(settings=settings)
+        p.crawl(spider_cls)
         p.start()
 
     p = Process(target=f)

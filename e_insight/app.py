@@ -52,7 +52,8 @@ def scheduler():
     LOG.info("scheduler started.")
     schedule.every(30).seconds.do(ping)
 
-    schedule.every(10).minutes.do(start_crawl, EastMoneyTreasury, EastMoneyTradeFlow)
+    schedule.every(10).minutes.do(start_crawl, EastMoneyTreasury)
+    schedule.every(10).minutes.do(start_crawl, EastMoneyTradeFlow)
 
     schedule.every(60).seconds.do(start_crawl, SinaStock)
 
@@ -60,7 +61,8 @@ def scheduler():
 
     schedule.every(3).minutes.do(start_crawl, USABond)
 
-    schedule.every(3).minutes.do(start_crawl, ShiborShanghai, ShiborShanghaiLPR)
+    schedule.every(3).minutes.do(start_crawl, ShiborShanghai)
+    schedule.every(3).minutes.do(start_crawl, ShiborShanghaiLPR)
 
     lock = FileLock("scheduler.lock", timeout=3)
     with lock:

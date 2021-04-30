@@ -2,6 +2,8 @@ import logging
 import requests
 import json
 
+from prometheus_client.metrics import Gauge
+
 from prometheus_client.core import Metric, GaugeMetricFamily
 from prometheus_client.samples import Sample
 
@@ -13,6 +15,7 @@ MetricsMap = dict()
 
 
 def sample_line(s):
+    LOG.debug("sample_line %s", s)
     if s.labels:
         labelstr = '{{{0}}}'.format(','.join(
             ['{0}="{1}"'.format(
@@ -107,6 +110,13 @@ class PrometheusMetricItemPipeline:
         if item.__class__.__name__ != "MetricItem":
             LOG.info("item type %s not MetricItem. ", item.__class__.__name__)
             return
+        if item["type"] == Gauge._type:
+            try:
+                floatToGoString(item["value"])
+            except Exception as e:
+                LOG.error("parse item %s err %s ", item, str(e))
+                return
+
         resp = requests.post("http://localhost:8000/metrics/data", json={
             "name": item["name"],
             "type": item["type"],
