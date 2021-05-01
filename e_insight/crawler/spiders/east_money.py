@@ -113,7 +113,7 @@ class EastMoneyTradeFlow(scrapy.Spider):
 
     def parse(self, response, **kwargs):
         data = json.loads(response.text)
-        data = data["data"]["klines"][-1]
+        data = data["data"]["klines"][-1].split(",")
         for k, v in self.data_idx.items():
             yield MetricItem(
                 name="trade_flow",

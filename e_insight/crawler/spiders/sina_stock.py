@@ -15,7 +15,8 @@ LOG = logging.getLogger(__name__)
 
 class SinaStock(scrapy.Spider):
     name = "sina_stock"
-    start_urls = ["http://hq.sinajs.cn/list=%s" % ",".join(["sh000300", "sh000001", "sh600519", "hk00700", "hk03690"])]
+    start_urls = ["http://hq.sinajs.cn/list=%s" % ",".join(
+        ["sh000300", "sh000001", "sh600519", "hk00700", "hk03690", "sz399006", "sz399001"])]
     data_idx = {
         "open": 1,
         "closed": 2,
