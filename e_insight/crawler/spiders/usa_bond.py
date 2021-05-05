@@ -1,6 +1,7 @@
 import logging
 import scrapy
 import time
+import json
 from datetime import datetime
 from xml.dom.minidom import parseString
 
@@ -48,4 +49,25 @@ class USABond(scrapy.Spider):
                 description="美国国债利率"
             )
 
-            
+
+class CNBCQuotes(scrapy.Spider):
+    name = "cnbc_quotes"
+
+    start_urls = ["https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?output=json&symbols=%s" % i
+                  for i in ["US10Y"]]
+
+    def parse(self, response, **kwargs):
+        data = json.loads(response.text)
+        data = data.get("FormattedQuoteResult", {}).get("FormattedQuote", [])[-1]
+        symbol = data.get("symbol", "")
+        for price in ["last", "high", "low", "open"]:
+            v = data[price]
+            if str(v).endswith("%"):
+                v = v[:-1]
+            yield MetricItem(
+                name="CNBC_QUOTE",
+                value=float(v),
+                labels={"price": price, "symbol": symbol},
+                type=Gauge._type,
+                description="CNBC QUOTE "
+            )

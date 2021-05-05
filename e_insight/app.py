@@ -41,7 +41,7 @@ def hello():
 # gunicorn --log-level debug  e_insight.app:app_dispatch --reload -w 1 --bind 0.0.0.0
 
 
-from e_insight.crawler.spiders.usa_bond import USABond
+from e_insight.crawler.spiders.usa_bond import USABond, CNBCQuotes
 from e_insight.crawler.spiders.east_money import EastMoney, EastMoneyTreasury, EastMoneyTradeFlow
 from e_insight.crawler.spiders.sina_stock import SinaStock
 from e_insight.crawler.spiders.shibor import ShiborShanghai, ShiborShanghaiLPR
@@ -57,6 +57,7 @@ def scheduler():
 
     schedule.every(60).seconds.do(start_crawl, SinaStock)
 
+    schedule.every(3).minutes.do(start_crawl, CNBCQuotes)
     schedule.every(3).minutes.do(start_crawl, EastMoney)
 
     schedule.every(3).minutes.do(start_crawl, USABond)
