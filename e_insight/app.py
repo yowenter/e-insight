@@ -56,8 +56,8 @@ def scheduler():
     schedule.every(10).minutes.do(start_crawl, EastMoneyTradeFlow)
 
     schedule.every(60).seconds.do(start_crawl, SinaStock)
+    schedule.every(60).seconds.do(start_crawl, CNBCQuotes)
 
-    schedule.every(3).minutes.do(start_crawl, CNBCQuotes)
     schedule.every(3).minutes.do(start_crawl, EastMoney)
 
     schedule.every(3).minutes.do(start_crawl, USABond)

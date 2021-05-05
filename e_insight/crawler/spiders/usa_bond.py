@@ -54,7 +54,7 @@ class CNBCQuotes(scrapy.Spider):
     name = "cnbc_quotes"
 
     start_urls = ["https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?output=json&symbols=%s" % i
-                  for i in ["US10Y"]]
+                  for i in ["US10Y", "US2Y", "VIX", ".IXIC", ".DJI", ".SPX", ".HSI", ".SZI", ".SSEC", "@SI.1"]]
 
     def parse(self, response, **kwargs):
         data = json.loads(response.text)
