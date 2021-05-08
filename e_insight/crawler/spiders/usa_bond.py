@@ -66,13 +66,12 @@ class CNBCQuotes(scrapy.Spider):
             v = data[price].replace(",", "")
             if str(v).endswith("%"):
                 v = v[:-1]
-
             yield MetricItem(
                 name="CNBC_QUOTE",
                 value=float(v),
                 labels={"price": price, "symbol": symbol},
                 type=Gauge._type,
-                description=help
+                description="CNBC QUOTE PRICE"
             )
 
         yield MetricItem(

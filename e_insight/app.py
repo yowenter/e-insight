@@ -52,8 +52,8 @@ def scheduler():
     LOG.info("scheduler started.")
     schedule.every(30).seconds.do(ping)
 
-    schedule.every(10).minutes.do(start_crawl, EastMoneyTreasury)
-    schedule.every(10).minutes.do(start_crawl, EastMoneyTradeFlow)
+    schedule.every(3).minutes.do(start_crawl, EastMoneyTreasury)
+    schedule.every(3).minutes.do(start_crawl, EastMoneyTradeFlow)
 
     schedule.every(60).seconds.do(start_crawl, SinaStock)
     schedule.every(60).seconds.do(start_crawl, CNBCQuotes)

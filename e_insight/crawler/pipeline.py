@@ -105,6 +105,7 @@ def MetricsHandler():
 
 class PrometheusMetricItemPipeline:
 
+
     def process_item(self, item, spider):
         LOG.info("process item %s from crawler %s", item, spider.name)
         if item.__class__.__name__ != "MetricItem":
@@ -124,4 +125,5 @@ class PrometheusMetricItemPipeline:
             "value": item["value"],
             "labels": item["labels"]
         })
+
     # LOG.info("upload metrics data, resp %s", resp.status_code)
