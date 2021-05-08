@@ -62,7 +62,7 @@ class CNBCQuotes(scrapy.Spider):
         data = json.loads(response.text)
         data = data.get("FormattedQuoteResult", {}).get("FormattedQuote", [])[-1]
         symbol = data.get("symbol", "")
-        help = data.get("name", "")
+        name = data.get("name", "")
         change = data.get("change", "").replace("+", "")
         for price in ["last", "high", "low", "open"]:
             v = data[price].replace(",", "")
@@ -71,7 +71,7 @@ class CNBCQuotes(scrapy.Spider):
             yield MetricItem(
                 name="CNBC_QUOTE",
                 value=float(v),
-                labels={"price": price, "symbol": symbol},
+                labels={"price": price, "symbol": symbol, "name": "name"},
                 type=Gauge._type,
                 description="CNBC QUOTE PRICE"
             )
@@ -79,7 +79,7 @@ class CNBCQuotes(scrapy.Spider):
         yield MetricItem(
             name="CNBC_QUOTE_CHANGE",
             value=float(change),
-            labels={"symbol": symbol},
+            labels={"symbol": symbol, "name": name},
             type=Gauge._type,
             description="CNBC QUOTES CHANGE"
         )
