@@ -64,6 +64,7 @@ class CNBCQuotes(scrapy.Spider):
             v = data[price]
             if str(v).endswith("%"):
                 v = v[:-1]
+            v = v.replace(",", "")
             yield MetricItem(
                 name="CNBC_QUOTE",
                 value=float(v),
