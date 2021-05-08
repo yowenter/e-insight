@@ -60,14 +60,25 @@ class CNBCQuotes(scrapy.Spider):
         data = json.loads(response.text)
         data = data.get("FormattedQuoteResult", {}).get("FormattedQuote", [])[-1]
         symbol = data.get("symbol", "")
+        help = data.get("name", "")
+        change = data.get("change", "").replace("+", "")
         for price in ["last", "high", "low", "open"]:
-            v = data[price]
+            v = data[price].replace(",", "")
             if str(v).endswith("%"):
                 v = v[:-1]
+
             yield MetricItem(
                 name="CNBC_QUOTE",
                 value=float(v),
                 labels={"price": price, "symbol": symbol},
                 type=Gauge._type,
-                description="CNBC QUOTE "
+                description=help
             )
+
+        yield MetricItem(
+            name="CNBC_QUOTE_CHANGE",
+            value=float(change),
+            labels={"symbol": symbol},
+            type=Gauge._type,
+            description="CNBC QUOTES CHANGE"
+        )
