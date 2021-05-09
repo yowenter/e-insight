@@ -1,6 +1,7 @@
 import logging
 import scrapy
 import time
+import re
 import json
 from datetime import datetime
 from xml.dom.minidom import parseString
@@ -56,13 +57,13 @@ class CNBCQuotes(scrapy.Spider):
     start_urls = ["https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?output=json&symbols=%s" % i
                   for i in
                   ["US10Y", "US2Y", "VIX", ".IXIC", ".DJI", ".SPX", ".HSI", ".SZI", ".SSEC", "@SI.1", "@HG.1", "@CT.1",
-                   "@S.1", "@W.1", "@PL.1", "@SI.1", "@CL.1"]]
+                   "@S.1", "@W.1", "@PL.1", "@SI.1", "@CL.1", "BTC.CM="]]
 
     def parse(self, response, **kwargs):
         data = json.loads(response.text)
         data = data.get("FormattedQuoteResult", {}).get("FormattedQuote", [])[-1]
         symbol = data.get("symbol", "")
-        name = data.get("name", "")
+        name = re.search(r"(\w| )+", data.get("name", "")).group().strip()
         change = data.get("change", "").replace("+", "")
         for price in ["last", "high", "low", "open"]:
             v = data[price].replace(",", "")
@@ -71,7 +72,7 @@ class CNBCQuotes(scrapy.Spider):
             yield MetricItem(
                 name="CNBC_QUOTE",
                 value=float(v),
-                labels={"price": price, "symbol": symbol, "name": "name"},
+                labels={"price": price, "symbol": symbol, "name": name},
                 type=Gauge._type,
                 description="CNBC QUOTE PRICE"
             )
