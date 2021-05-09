@@ -33,7 +33,8 @@ class SinaStock(scrapy.Spider):
         "current": 6,
         "max": 3,
         "min": 4,
-        "trade_amount": 14
+        "trade_amount": 14,
+        "closed": 10
 
     }
 
@@ -66,6 +67,17 @@ class SinaStock(scrapy.Spider):
                 data_idx = self.hk_data_idx
             if str(stockNo).startswith("nf"):
                 data_idx = self.future_idx
+                yield MetricItem(
+                    name="sina_stocks",
+                    value=float(points[data_idx["current"] - 1]) - float(points[data_idx["closed"] - 1]),
+                    type=Gauge._type,
+                    labels={
+                        "stock_no": stockNo,
+                        "stock_name": stock_name,
+                        "price": "inc"
+                    },
+                    description="新浪财经"
+                )
 
             for k, idx in data_idx.items():
                 idx = idx
