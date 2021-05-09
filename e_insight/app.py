@@ -42,7 +42,8 @@ def hello():
 
 
 from e_insight.crawler.spiders.usa_bond import USABond, CNBCQuotes
-from e_insight.crawler.spiders.east_money import EastMoney, EastMoneyTreasury, EastMoneyTradeFlow
+from e_insight.crawler.spiders.east_money import EastMoney, EastMoneyTreasury, EastMoneyTradeFlow, EastMoneyCPI, \
+    EastMoneyPMI, EastMoneyPPI
 from e_insight.crawler.spiders.sina_stock import SinaStock
 from e_insight.crawler.spiders.shibor import ShiborShanghai, ShiborShanghaiLPR
 
@@ -54,6 +55,9 @@ def scheduler():
 
     schedule.every(3).minutes.do(start_crawl, EastMoneyTreasury)
     schedule.every(3).minutes.do(start_crawl, EastMoneyTradeFlow)
+    schedule.every(3).minutes.do(start_crawl, EastMoneyPMI)
+    schedule.every(3).minutes.do(start_crawl, EastMoneyPPI)
+    schedule.every(3).minutes.do(start_crawl, EastMoneyCPI)
 
     schedule.every(60).seconds.do(start_crawl, SinaStock)
     schedule.every(60).seconds.do(start_crawl, CNBCQuotes)

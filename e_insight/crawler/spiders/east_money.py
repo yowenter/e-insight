@@ -122,3 +122,78 @@ class EastMoneyTradeFlow(scrapy.Spider):
                 type=Gauge._type,
                 labels={"flow": k}
             )
+
+
+class EastMoneyPPI(scrapy.Spider):
+    name = "east_money_ppi"
+    start_urls = ["https://datainterface.eastmoney.com/EM_DataCenter/JS.aspx?type=GJZB&sty=ZGZB&p=1&ps=200&mkt=22"]
+
+    def parse(self, response, **kwargs):
+        data = json.loads(response.text[1:-1])
+        points = data[0].split(",")
+        current = float(points[1])
+        inc = float(points[2])
+        yield MetricItem(
+            name="cn_ppi",
+            value=current,
+            description="PPI",
+            type=Gauge._type,
+            labels={"price": "current"}
+        )
+        yield MetricItem(
+            name="cn_ppi",
+            value=inc,
+            description="PPI",
+            type=Gauge._type,
+            labels={"price": "inc"}
+        )
+
+
+class EastMoneyPMI(scrapy.Spider):
+    name = "east_money_pmi"
+    start_urls = ["https://datainterface.eastmoney.com/EM_DataCenter/JS.aspx?type=GJZB&sty=ZGZB&p=1&ps=200&mkt=21"]
+
+    def parse(self, response, **kwargs):
+        data = json.loads(response.text[1:-1])
+        points = data[0].split(",")
+        current = float(points[1])
+        inc = float(points[2])
+        yield MetricItem(
+            name="cn_pmi",
+            value=current,
+            description="PMI",
+            type=Gauge._type,
+            labels={"price": "current"}
+        )
+        yield MetricItem(
+            name="cn_pmi",
+            value=inc,
+            description="PMI",
+            type=Gauge._type,
+            labels={"price": "inc"}
+        )
+
+
+class EastMoneyCPI(scrapy.Spider):
+    name = "east_money_cpi"
+    start_urls = ["https://datainterface.eastmoney.com/EM_DataCenter/JS.aspx?type=GJZB&sty=ZGZB&p=1&ps=200&mkt=19"]
+
+    def parse(self, response, **kwargs):
+        data = json.loads(response.text[1:-1])
+        points = data[0].split(",")
+        current = float(points[1])
+        inc = float(points[2])
+        yield MetricItem(
+            name="cn_cpi",
+            value=current,
+            description="CPI",
+            type=Gauge._type,
+            labels={"price": "current"}
+        )
+        yield MetricItem(
+            name="cn_cpi",
+            value=inc,
+            description="CPI",
+            type=Gauge._type,
+            labels={"price": "inc"}
+        )
