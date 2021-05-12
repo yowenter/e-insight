@@ -99,3 +99,28 @@ class CNBCQuotes(scrapy.Spider):
             type=Gauge._type,
             description="CNBC QUOTES CHANGE"
         )
+        if str(symbol).startswith("US"):
+            coupon = data.get("coupon").replace("%", "")
+            if coupon != "":
+                yield MetricItem(
+                    name="US_BOND_COUPON",
+                    value=float(coupon),
+                    labels={"symbol": symbol, "name": name},
+                    type=Gauge._type,
+                    description="CNBC QUOTE BOND"
+                )
+                for price in ["bond_last_price", "bond_change_price", "bond_change_pct_price", "bond_open_price",
+                              "bond_high_price", "bond_low_price", "bond_prev_day_closing_price"]:
+                    v = data[price].replace(",", "").replace("%", "").replace("+", "")
+                    if str(v).endswith("%"):
+                        v = v[:-1]
+                    if v == "UNCH":
+                        v = "0"
+
+                    yield MetricItem(
+                        name="US_BOND_PRICE",
+                        value=float(v),
+                        labels={"price": price[5:-6], "symbol": symbol, "name": name},
+                        type=Gauge._type,
+                        description="CNBC QUOTE PRICE"
+                    )
