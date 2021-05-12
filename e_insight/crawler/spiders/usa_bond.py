@@ -18,7 +18,7 @@ class USABond(scrapy.Spider):
     cur_month = datetime.now().month
     cur_year = datetime.now().year
 
- # https://data.treasury.gov/feed.svc/DailyTreasuryYieldCurveRateData?$filter=month(NEW_DATE)%20eq%205%20and%20year(NEW_DATE)%20eq%202021
+    # https://data.treasury.gov/feed.svc/DailyTreasuryYieldCurveRateData?$filter=month(NEW_DATE)%20eq%205%20and%20year(NEW_DATE)%20eq%202021
     url = "https://data.treasury.gov/feed.svc/DailyTreasuryYieldCurveRateData?$filter=month(NEW_DATE)%20eq%20{month}%20and%20year(NEW_DATE)%20eq%20{year}".format(
         month=cur_month, year=cur_year)
     start_urls = [url]
@@ -66,6 +66,12 @@ class CNBCQuotes(scrapy.Spider):
         symbol = data.get("symbol", "")
         name = re.search(r"(\w| )+", data.get("name", "")).group().strip()
         change = data.get("change", "").replace("+", "")
+        if change == "UNCH":
+            change = 0
+        change_p = data.get("change_pct", "").replace("%", "").replace("+", "")
+        if change_p == "UNCH":
+            change_p = 0
+
         for price in ["last", "high", "low", "open"]:
             v = data[price].replace(",", "")
             if str(v).endswith("%"):
@@ -81,7 +87,15 @@ class CNBCQuotes(scrapy.Spider):
         yield MetricItem(
             name="CNBC_QUOTE_CHANGE",
             value=float(change),
-            labels={"symbol": symbol, "name": name},
+            labels={"symbol": symbol, "name": name, "change_type": "raw"},
+            type=Gauge._type,
+            description="CNBC QUOTES CHANGE"
+        )
+
+        yield MetricItem(
+            name="CNBC_QUOTE_CHANGE",
+            value=float(change_p),
+            labels={"symbol": symbol, "name": name, "change_type": "percent"},
             type=Gauge._type,
             description="CNBC QUOTES CHANGE"
         )
