@@ -18,6 +18,7 @@ class USABond(scrapy.Spider):
     cur_month = datetime.now().month
     cur_year = datetime.now().year
 
+ # https://data.treasury.gov/feed.svc/DailyTreasuryYieldCurveRateData?$filter=month(NEW_DATE)%20eq%205%20and%20year(NEW_DATE)%20eq%202021
     url = "https://data.treasury.gov/feed.svc/DailyTreasuryYieldCurveRateData?$filter=month(NEW_DATE)%20eq%20{month}%20and%20year(NEW_DATE)%20eq%20{year}".format(
         month=cur_month, year=cur_year)
     start_urls = [url]

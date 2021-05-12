@@ -24,7 +24,7 @@ class SinaStock(scrapy.Spider):
         "max": 4,
         "min": 5,
         "trade_amount": 8,
-        "trace_flow": 9
+        "trade_flow": 9
     }
 
     future_idx = {
