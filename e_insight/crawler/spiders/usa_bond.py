@@ -57,7 +57,8 @@ class CNBCQuotes(scrapy.Spider):
 
     start_urls = ["https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?output=json&symbols=%s" % i
                   for i in
-                  ["US10Y", "US2Y", "VIX", ".IXIC", ".DJI", ".SPX", ".HSI", ".SZI", ".SSEC", "@SI.1", "@HG.1", "@CT.1",
+                  ["US10Y", "US2Y", "US5Y", "US1Y", "VIX", ".IXIC", ".DJI", ".SPX", ".HSI", ".SZI", ".SSEC", "@SI.1",
+                   "@HG.1", "@CT.1",
                    "@S.1", "@W.1", "@PL.1", "@SI.1", "@CL.1", "BTC.CM="]]
 
     def parse(self, response, **kwargs):
