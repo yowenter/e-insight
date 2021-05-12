@@ -59,8 +59,8 @@ def scheduler():
     schedule.every(3).minutes.do(start_crawl, EastMoneyPPI)
     schedule.every(3).minutes.do(start_crawl, EastMoneyCPI)
 
-    schedule.every(60).seconds.do(start_crawl, SinaStock)
-    schedule.every(60).seconds.do(start_crawl, CNBCQuotes)
+    schedule.every(30).seconds.do(start_crawl, SinaStock)
+    schedule.every(30).seconds.do(start_crawl, CNBCQuotes)
 
     schedule.every(3).minutes.do(start_crawl, EastMoney)
 
