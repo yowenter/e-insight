@@ -73,7 +73,7 @@ class CNBCQuotes(scrapy.Spider):
         if change_p == "UNCH":
             change_p = 0
 
-        for price in ["last", "high", "low", "open"]:
+        for price in ["last", "high", "low", "open", "volume"]:
             v = data[price].replace(",", "")
             if str(v).endswith("%"):
                 v = v[:-1]

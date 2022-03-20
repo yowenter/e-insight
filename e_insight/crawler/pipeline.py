@@ -118,7 +118,7 @@ class PrometheusMetricItemPipeline:
                 LOG.error("parse item %s err %s ", item, str(e))
                 return
 
-        resp = requests.post("http://localhost:8000/metrics/data", json={
+        resp = requests.post("http://127.0.0.1:8000/metrics/data", json={
             "name": item["name"],
             "type": item["type"],
             "description": item["description"],
