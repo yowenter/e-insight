@@ -74,7 +74,7 @@ class CNBCQuotes(scrapy.Spider):
             change_p = 0
 
         for price in ["last", "high", "low", "open", "volume"]:
-            v = data[price].replace(",", "")
+            v = data.get(price, "0").replace(",", "")
             if str(v).endswith("%"):
                 v = v[:-1]
             yield MetricItem(
